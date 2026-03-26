@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Food Recommendation Engine</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="stars"></div>
+    
+    <div class="container">
+      <header>
+        <div class="header-content">
+          <h1 class="title-main">🍽️ Flavor Match</h1>
+          <p class="tagline">Discover Your Perfect Meal - Tailored Just For You</p>
+        </div>
+      </header>
+
+      <div class="main-content">
+        <!-- Profile Creation Section -->
+        <section class="card card-profile" id="profileSection">
+          <div class="section-header">
+            <h2>👤 Create Your Profile</h2>
+            <p class="section-subtitle">Tell us about your taste preferences</p>
+          </div>
+          
+          <form id="userForm" class="form-elegant">
+            <div class="form-group">
+              <label for="name">Your Name</label>
+              <div class="input-wrapper">
+                <span class="input-icon">👤</span>
+                <input type="text" id="name" required placeholder="John Doe" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <div class="input-wrapper">
+                <span class="input-icon">✉️</span>
+                <input type="email" id="email" required placeholder="john@example.com" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cuisine">Preferred Cuisine</label>
+                <div class="input-wrapper">
+                  <span class="input-icon">🌍</span>
+                  <select id="cuisine" required>
+                    <option value="">Select Cuisine</option>
+                    <option value="Indian">🇮🇳 Indian</option>
+                    <option value="Italian">🇮🇹 Italian</option>
+                    <option value="Thai">🇹🇭 Thai</option>
+                    <option value="Japanese">🇯🇵 Japanese</option>
+                    <option value="Mexican">🇲🇽 Mexican</option>
+                    <option value="Mediterranean">🏛️ Mediterranean</option>
+                    <option value="American">🇺🇸 American</option>
+                    <option value="Chinese">🇨🇳 Chinese</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="spice">Spice Level</label>
+                <div class="input-wrapper">
+                  <span class="input-icon">🌶️</span>
+                  <select id="spice" required>
+                    <option value="mild">🥶 Mild</option>
+                    <option value="medium" selected>🔥 Medium</option>
+                    <option value="spicy">🔥🔥 Spicy</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="diet">Diet Type</label>
+              <div class="input-wrapper">
+                  <span class="input-icon">🥗</span>
+                <select id="diet" required>
+                  <option value="all" selected>All Foods</option>
+                  <option value="vegetarian">🌱 Vegetarian</option>
+                  <option value="vegan">🌿 Vegan</option>
+                  <option value="non-veg">🍖 Non-Vegetarian</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-large">
+              ✨ Create My Profile ✨
+            </button>
+          </form>
+          <div id="userMessage" class="message"></div>
+        </section>
+
+        <!-- Hidden Sections (Show after profile creation) -->
+        <div id="contentAfterProfile" class="content-after-profile hidden">
+          
+          <!-- Get Recommendations -->
+          <section class="card card-recommendations">
+            <div class="section-header">
+              <h2>🎯 Get Recommendations</h2>
+              <p class="section-subtitle">Discover meals perfectly matched for you</p>
+            </div>
+            
+            <form id="recommendForm" class="form-elegant">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="topN">How many suggestions?</label>
+                  <div class="input-wrapper">
+                    <span class="input-icon">🎲</span>
+                    <select id="topN">
+                      <option value="3">3 Recommendations</option>
+                      <option value="5" selected>5 Recommendations</option>
+                      <option value="10">10 Recommendations</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary">
+                🔍 Find My Perfect Match
+              </button>
+            </form>
+            <div id="recommendMessage" class="message"></div>
+          </section>
+
+          <!-- Recommendations Display -->
+          <section class="card card-results">
+            <div class="section-header">
+              <h2>⭐ Your Perfect Matches</h2>
+            </div>
+            <div id="recommendationsList" class="recommendations-container"></div>
+          </section>
+
+          <!-- Food Catalog -->
+          <section class="card card-catalog">
+            <div class="section-header">
+              <h2>📚 Explore All Foods</h2>
+              <p class="section-subtitle">Browse our complete food collection</p>
+            </div>
+            
+            <button id="loadFoodsBtn" class="btn btn-secondary">
+              📖 View Full Catalog
+            </button>
+            <div id="foodsList" class="foods-grid"></div>
+          </section>
+        </div>
+
+        <!-- Welcome Message (Show when profile created) -->
+        <div id="welcomeMessage" class="hidden welcome-card">
+          <div class="welcome-content">
+            <h2>🎉 Welcome, <span id="userName"></span>!</h2>
+            <p>Your profile is ready. Let's find you some amazing food!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+  </body>
+</html>
