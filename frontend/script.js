@@ -1,10 +1,10 @@
 // Auto-switch API base (local vs production)
 const API_BASE =
   window.location.hostname === "localhost"
-    ? "http://localhost:8000/api"
-    : "/api";
+    ? "http://localhost:10000/api" // match your Flask port
+    : "https://food-recommender-web-tool.onrender.com/api";
 
-// Show message
+// Show messages
 function showMessage(elementId, message, type = "info") {
   const messageEl = document.getElementById(elementId);
   messageEl.textContent = message;
@@ -35,7 +35,6 @@ document.getElementById("userForm").addEventListener("submit", async (e) => {
 
     if (response.ok) {
       const user = await response.json();
-
       showMessage(
         "userMessage",
         `✓ Profile created! Your User ID: ${user.id}`,
@@ -55,8 +54,9 @@ document.getElementById("userForm").addEventListener("submit", async (e) => {
       }, 500);
 
       setTimeout(() => {
-        document.getElementById("profileSection").style.opacity = "0.5";
-        document.getElementById("profileSection").style.pointerEvents = "none";
+        const profileSection = document.getElementById("profileSection");
+        profileSection.style.opacity = "0.5";
+        profileSection.style.pointerEvents = "none";
       }, 1000);
 
       document.getElementById("userForm").reset();
@@ -80,7 +80,7 @@ document
     e.preventDefault();
 
     const userId = window.currentUserId;
-    const topN = document.getElementById("topN").value;
+    const topN = parseInt(document.getElementById("topN").value) || 3;
 
     if (!userId) {
       showMessage(
@@ -99,7 +99,6 @@ document
       if (response.ok) {
         const data = await response.json();
         const recommendations = data.recommendations || [];
-
         displayRecommendations(recommendations);
 
         showMessage(
@@ -128,7 +127,7 @@ document
 function displayRecommendations(recommendations) {
   const container = document.getElementById("recommendationsList");
 
-  if (recommendations.length === 0) {
+  if (!recommendations || recommendations.length === 0) {
     container.innerHTML =
       '<div class="empty-state"><p>No recommendations found</p></div>';
     return;
@@ -137,18 +136,14 @@ function displayRecommendations(recommendations) {
   container.innerHTML = recommendations
     .map(
       (rec) => `
-        <div class="recommendation-card">
-            <h3>🍽️ ${rec.name}</h3>
-            <p><strong>Cuisine:</strong> ${rec.cuisine}</p>
-            <p><strong>Rating:</strong> ⭐ ${rec.rating.toFixed(1)}/5</p>
-            <p><strong>Price:</strong> $${rec.price.toFixed(2)}</p>
-            <p><strong>Tags:</strong> ${rec.tags
-              .map((tag) => `<span class="food-tag">${tag}</span>`)
-              .join("")}</p>
-            <span class="score-badge">Match Score: ${(rec.score * 10).toFixed(
-              1,
-            )}%</span>
-        </div>
+      <div class="recommendation-card">
+        <h3>🍽️ ${rec.name}</h3>
+        <p><strong>Cuisine:</strong> ${rec.cuisine}</p>
+        <p><strong>Rating:</strong> ⭐ ${rec.rating.toFixed(1)}/5</p>
+        <p><strong>Price:</strong> $${rec.price.toFixed(2)}</p>
+        <p><strong>Tags:</strong> ${rec.tags ? rec.tags.map((tag) => `<span class="food-tag">${tag}</span>`).join("") : ""}</p>
+        <span class="score-badge">Match Score: ${(rec.score * 10).toFixed(1)}%</span>
+      </div>
     `,
     )
     .join("");
@@ -174,7 +169,7 @@ document.getElementById("loadFoodsBtn").addEventListener("click", async () => {
 function displayFoodsCatalog(foods) {
   const container = document.getElementById("foodsList");
 
-  if (foods.length === 0) {
+  if (!foods || foods.length === 0) {
     container.innerHTML =
       '<div class="empty-state"><p>No foods available</p></div>';
     return;
@@ -183,21 +178,19 @@ function displayFoodsCatalog(foods) {
   container.innerHTML = foods
     .map(
       (food) => `
-        <div class="food-item">
-            <h3>${food.name}</h3>
-            <p><strong>${food.cuisine}</strong></p>
-            <p class="food-rating">⭐ ${food.rating.toFixed(1)}/5</p>
-            <p><strong>Price:</strong> $${food.price.toFixed(2)}</p>
-            <div>${food.tags
-              .map((tag) => `<span class="food-tag">${tag}</span>`)
-              .join("")}</div>
-        </div>
+      <div class="food-item">
+        <h3>${food.name}</h3>
+        <p><strong>${food.cuisine}</strong></p>
+        <p class="food-rating">⭐ ${food.rating.toFixed(1)}/5</p>
+        <p><strong>Price:</strong> $${food.price.toFixed(2)}</p>
+        <div>${food.tags ? food.tags.map((tag) => `<span class="food-tag">${tag}</span>`).join("") : ""}</div>
+      </div>
     `,
     )
     .join("");
 }
 
-// Init
+// Initialize
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("🚀 App loaded");
+  console.log("🚀 Food Recommender App loaded!");
 });
