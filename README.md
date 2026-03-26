@@ -6,6 +6,9 @@ Food Recommender Web Tool  A simple web app that recommends food based on user p
 
 A complete production-ready food recommendation engine built with FastAPI, PostgreSQL, Redis, and vanilla JavaScript.
 
+🌐 **Live Demo:** 
+https://food-recommender-web-tool.onrender.com/
+
 ## Features
 
 - **User Management**: Create user profiles with preferences
