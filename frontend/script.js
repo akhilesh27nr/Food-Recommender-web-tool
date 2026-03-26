@@ -1,4 +1,8 @@
-const API_BASE = "http://localhost:8000/api";
+// Auto-switch API base (local vs production)
+const API_BASE =
+  window.location.hostname === "localhost"
+    ? "http://localhost:8000/api"
+    : "/api";
 
 // Show message
 function showMessage(elementId, message, type = "info") {
@@ -31,37 +35,38 @@ document.getElementById("userForm").addEventListener("submit", async (e) => {
 
     if (response.ok) {
       const user = await response.json();
+
       showMessage(
         "userMessage",
         `✓ Profile created! Your User ID: ${user.id}`,
         "success",
       );
-      
-      // Store user ID and show rest of content
+
       window.currentUserId = user.id;
-      
-      // Show welcome message
+
       document.getElementById("welcomeMessage").classList.remove("hidden");
       document.getElementById("userName").textContent = user.name;
-      
-      // Show content after profile
       document.getElementById("contentAfterProfile").classList.remove("hidden");
-      
-      // Scroll to welcome message
+
       setTimeout(() => {
-        document.getElementById("welcomeMessage").scrollIntoView({ behavior: "smooth" });
+        document
+          .getElementById("welcomeMessage")
+          .scrollIntoView({ behavior: "smooth" });
       }, 500);
-      
-      // Hide profile section after a delay
+
       setTimeout(() => {
         document.getElementById("profileSection").style.opacity = "0.5";
         document.getElementById("profileSection").style.pointerEvents = "none";
       }, 1000);
-      
+
       document.getElementById("userForm").reset();
     } else {
       const error = await response.json();
-      showMessage("userMessage", `✗ ${error.error || "Error creating profile"}`, "error");
+      showMessage(
+        "userMessage",
+        `✗ ${error.error || "Error creating profile"}`,
+        "error",
+      );
     }
   } catch (error) {
     showMessage("userMessage", `✗ Connection error: ${error.message}`, "error");
@@ -94,7 +99,9 @@ document
       if (response.ok) {
         const data = await response.json();
         const recommendations = data.recommendations || [];
+
         displayRecommendations(recommendations);
+
         showMessage(
           "recommendMessage",
           `✓ Found ${recommendations.length} recommendations!`,
@@ -102,7 +109,11 @@ document
         );
       } else {
         const error = await response.json();
-        showMessage("recommendMessage", `✗ ${error.error || "User not found"}`, "error");
+        showMessage(
+          "recommendMessage",
+          `✗ ${error.error || "User not found"}`,
+          "error",
+        );
       }
     } catch (error) {
       showMessage(
@@ -131,8 +142,12 @@ function displayRecommendations(recommendations) {
             <p><strong>Cuisine:</strong> ${rec.cuisine}</p>
             <p><strong>Rating:</strong> ⭐ ${rec.rating.toFixed(1)}/5</p>
             <p><strong>Price:</strong> $${rec.price.toFixed(2)}</p>
-            <p><strong>Tags:</strong> ${rec.tags.map((tag) => `<span class="food-tag">${tag}</span>`).join("")}</p>
-            <span class="score-badge">Match Score: ${(rec.score * 10).toFixed(1)}%</span>
+            <p><strong>Tags:</strong> ${rec.tags
+              .map((tag) => `<span class="food-tag">${tag}</span>`)
+              .join("")}</p>
+            <span class="score-badge">Match Score: ${(rec.score * 10).toFixed(
+              1,
+            )}%</span>
         </div>
     `,
     )
@@ -173,14 +188,16 @@ function displayFoodsCatalog(foods) {
             <p><strong>${food.cuisine}</strong></p>
             <p class="food-rating">⭐ ${food.rating.toFixed(1)}/5</p>
             <p><strong>Price:</strong> $${food.price.toFixed(2)}</p>
-            <div>${food.tags.map((tag) => `<span class="food-tag">${tag}</span>`).join("")}</div>
+            <div>${food.tags
+              .map((tag) => `<span class="food-tag">${tag}</span>`)
+              .join("")}</div>
         </div>
     `,
     )
     .join("");
 }
 
-// Initialize
+// Init
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("🚀 Food Recommendation App loaded!");
+  console.log("🚀 App loaded");
 });
