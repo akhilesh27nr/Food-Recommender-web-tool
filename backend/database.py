@@ -4,10 +4,7 @@ from sqlalchemy.pool import NullPool
 import os
 import time
 
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "mysql+pymysql://fooduser:foodpass@localhost:3306/food_recommender"
-)
+DATABASE_URL = "sqlite:///./test.db"
 
 # Retry connection logic
 max_retries = 10
@@ -18,8 +15,7 @@ while retry_count < max_retries:
     try:
         engine = create_engine(
             DATABASE_URL,
-            pool_pre_ping=True,
-            connect_args={"connect_timeout": 5}
+            connect_args={"check_same_thread": False}
         )
         # Test connection
         with engine.connect() as conn:
